@@ -1,0 +1,51 @@
+# ==========================================
+# THƯ MỤC THƯ VIỆN (Bắt buộc phải có)
+# ==========================================
+node_modules/
+
+# ==========================================
+# BIẾN MÔI TRƯỜNG & BẢO MẬT (Quan trọng)
+# ==========================================
+.env
+.env.test
+.env.production
+.env.local
+
+# ==========================================
+# FILE LOGS (Của Winston và npm/yarn)
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# CÁC FILE CỦA HỆ ĐIỀU HÀNH (Mac/Windows)
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==========================================
+# CÁC FILE CỦA TRÌNH SOẠN THẢO (VS Code, WebStorm...)
+# ==========================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ==========================================
+# BUILD & KHÁC
+# ==========================================
+build/
+dist/
+coverage/
