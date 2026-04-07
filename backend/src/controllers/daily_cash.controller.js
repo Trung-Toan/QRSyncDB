@@ -3,7 +3,7 @@ const errorRes = require("../../common/errors/index");
 const logger = require("../../common/utils/logger");
 const dailyCashService = require("../service/daily_cash.service");
 const Pagination = require("../../common/responses/Pagination");
-const {cleanObjectData} = require("../../common/utils/cleanObjectData");
+const { cleanObjectData } = require("../../common/utils/cleanObjectData");
 
 // Create
 const create = async (req, res) => {
@@ -13,10 +13,10 @@ const create = async (req, res) => {
             const cleanData = cleanObjectData(dataInsert);
             const result = await dailyCashService.create(cleanData);
             return new successRes.CreateSuccess({
-                  data: result, 
+                  result,
                   message: "Tạo thanh toán thành công",
             }).send(res);
-            
+
       } catch (error) {
             logger.error("Create failed", { context, error: error.message });
             throw error;
@@ -26,15 +26,15 @@ const create = async (req, res) => {
 const getList = async (req, res) => {
       const context = "Controller.DailyCash.getList";
       try {
-            const {data, pagination} = await dailyCashService.getList(req.query);
-            
+            const { data, pagination } = await dailyCashService.getList(req.query);
+
             const paginationData = new Pagination({
                   page: pagination.page,
                   size: pagination.size,
                   totalItems: pagination.totalItems,
             });
             return new successRes.GetListSuccess({
-                  data: data,
+                  data,
                   pagination: paginationData,
                   message: "Lấy danh sách thanh toán thành công",
             }).send(res);
@@ -58,7 +58,7 @@ const getDetail = async (req, res) => {
             }
             const result = await dailyCashService.getDetail(id);
             return new successRes.GetDetailSuccess({
-                  data: result,
+                  result,
                   message: "Lấy chi tiết thanh toán thành công",
             }).send(res);
       } catch (error) {

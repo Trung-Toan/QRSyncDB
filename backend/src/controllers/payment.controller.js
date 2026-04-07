@@ -16,11 +16,10 @@ const create = async (req, res) => {
             
             const excelData = excelService.parseExcelBuffer(req.file.buffer);
             
-            // THAY ĐỔI Ở ĐÂY: Service trả về mảng trực tiếp, không còn bọc trong { data: ... }
             const result = await paymentService.create(excelData);
 
             return new successRes.CreateSuccess({
-                  data: result, // result lúc này chính là mảng data
+                  result, // result lúc này chính là mảng data
                   message: "Tạo thanh toán thành công",
             }).send(res);
             
@@ -41,7 +40,7 @@ const getList = async (req, res) => {
                   totalItems: pagination.totalItems,
             });
             return new successRes.GetListSuccess({
-                  data: data,
+                  data,
                   pagination: paginationData,
                   message: "Lấy danh sách thanh toán thành công",
             }).send(res);
@@ -61,7 +60,7 @@ const getDetail = async (req, res) => {
       try {
             const result = await paymentService.getDetail(req.params.id);
             return new successRes.GetDetailSuccess({
-                  data: result,
+                  result,
                   message: "Lấy chi tiết thanh toán thành công",
             }).send(res);
       } catch (error) {
