@@ -1,65 +1,48 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
 
 const paymentSchema = new mongoose.Schema({
-      date_transaction: {
-            type: Date,
-            default: Date.now,
-            required: true
-      },
-      amount: {
-            type: Number,
-            required: true,
-            min: [0, 'Số tiền giao dịch không được nhỏ hơn 0']
-      },
-      account_balance: {
-            type: Number,
-            required: function () {
-                  return this.type_payment === 'QR';
-            },
-            min: [0, 'Số dư tài khoản không được âm']
-      },
-      user_pay: {
-            type: String,
-            required: true,
-            trim: true
-      },
-      type_payment: {
-            type: String,
-            enum: ['QR', 'Cash'],
-            default: 'QR'
-      },
-      transaction_id: {
-            type: String,
-            unique: true,
-            sparse: true
-      },
-      content: {
-            type: String,
-            trim: true
-      }
+    // 1. Ngày giao dịch
+    transaction_date: { 
+        type: Date, 
+        required: true 
+    },
+    // 2. Đối tác giao dịch
+    remitter: { 
+        type: String, 
+        default: "" 
+    },
+    // 3. NH Đối tác
+    remitter_bank: { 
+        type: String, 
+        default: "" 
+    },
+    // 4. Diễn giải 
+    details: { 
+        type: String, 
+        default: "" 
+    },
+    // 5. Số bút toán 
+    transaction_no: { 
+        type: String, 
+        default: "",
+        index: true
+    },
+    // 6. Nợ TKTT - Số tiền ra 
+    debit: { 
+        type: Number, 
+        default: 0 
+    },
+    // 7. Có TKTT - Số tiền vào 
+    credit: { 
+        type: Number, 
+        default: 0 
+    },
+    // 8. Số dư sau giao dịch 
+    balance: { 
+        type: Number, 
+        default: 0 
+    }
 }, { timestamps: true });
-
-// Middleware xử lý tự động tạo transaction_id duy nhất trước khi lưu
-paymentSchema.pre('save', async function (next) {
-      if (this.isNew && this.type_payment === 'QR' && !this.transaction_id) {
-            let isUnique = false;
-
-            while (!isUnique) {
-                  const randomString = crypto.randomBytes(4).toString('hex').toUpperCase();
-                  const newTransactionId = `TRANS_QR_${randomString}`;
-
-                  const existingPayment = await this.constructor.findOne({ transaction_id: newTransactionId });
-
-                  if (!existingPayment) {
-                        this.transaction_id = newTransactionId;
-                        isUnique = true;
-                  } else {
-                        console.log(`⚠️ Phát hiện trùng lặp mã QR: ${newTransactionId}. Đang tạo lại mã mới...`);
-                  }
-            }
-      }
-      next();
-});
+paymentSchema.index({ transaction_no: 1, transaction_date: 1 }, { unique: true });
 const Payment = mongoose.model('Payment', paymentSchema);
 module.exports = Payment;
