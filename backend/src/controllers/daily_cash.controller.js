@@ -12,10 +12,10 @@ const create = async (req, res) => {
             const dataInsert = req.body || {};
             const cleanData = cleanObjectData(dataInsert);
             const result = await dailyCashService.create(cleanData);
-            return new successRes.CreateSuccess({
+            return new successRes.CreateSuccess(
                   result,
-                  message: "Tạo thanh toán thành công",
-            }).send(res);
+                  "Tạo thanh toán thành công",
+            ).send(res);
 
       } catch (error) {
             logger.error("Create failed", { context, error: error.message });
@@ -33,11 +33,11 @@ const getList = async (req, res) => {
                   size: pagination.size,
                   totalItems: pagination.totalItems,
             });
-            return new successRes.GetListSuccess({
+            return new successRes.GetListSuccess(
                   data,
-                  pagination: paginationData,
-                  message: "Lấy danh sách thanh toán thành công",
-            }).send(res);
+                  paginationData,
+                  "Lấy danh sách thanh toán thành công",
+            ).send(res);
       } catch (error) {
             logger.error("Get list failed", {
                   context,
@@ -57,10 +57,10 @@ const getDetail = async (req, res) => {
                   throw new errorRes.BadRequestError("ID không được để trống.");
             }
             const result = await dailyCashService.getDetail(id);
-            return new successRes.GetDetailSuccess({
+            return new successRes.GetDetailSuccess(
                   result,
-                  message: "Lấy chi tiết thanh toán thành công",
-            }).send(res);
+                  "Lấy chi tiết thanh toán thành công",
+            ).send(res);
       } catch (error) {
             logger.error("Get detail failed", {
                   context,

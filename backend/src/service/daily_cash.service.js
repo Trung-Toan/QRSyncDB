@@ -141,7 +141,7 @@ const getList = async (query) => {
                         page,
                         size,
                         totalItems
-                  }, Í
+                  }
             };
       } catch (error) {
             logger.error("Get list failed", {
