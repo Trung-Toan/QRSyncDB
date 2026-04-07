@@ -68,14 +68,14 @@ const create = async (excelData) => {
 
     // 3. Insert và CHỈ trả về mảng data đã insert
     const insertedData = await PaymentModel.insertMany(newData, { ordered: false });
-    
+
     return insertedData; // Trả về mảng các document đã tạo
 
   } catch (error) {
     logger.error("Create failed", { context, error: error.message });
     if (error.code === 11000) {
-       // Nếu vẫn dính duplicate (do race condition), trả về mảng rỗng hoặc xử lý tùy ý
-       return []; 
+      // Nếu vẫn dính duplicate (do race condition), trả về mảng rỗng hoặc xử lý tùy ý
+      return [];
     }
     throw error;
   }
@@ -128,19 +128,19 @@ const getList = async (query) => {
 
     // filter theo date
     if (fromDate || toDate) {
-        filter.transaction_date = {};
+      filter.transaction_date = {};
 
-        if (fromDate) {
-            const from = new Date(fromDate);
-            from.setHours(0, 0, 0, 0); // 00:00:00.000
-            filter.transaction_date.$gte = from;
-        }
+      if (fromDate) {
+        const from = new Date(fromDate);
+        from.setHours(0, 0, 0, 0); // 00:00:00.000
+        filter.transaction_date.$gte = from;
+      }
 
-        if (toDate) {
-            const to = new Date(toDate);
-            to.setHours(23, 59, 59, 999); // 23:59:59.999
-            filter.transaction_date.$lte = to;
-        }
+      if (toDate) {
+        const to = new Date(toDate);
+        to.setHours(23, 59, 59, 999); // 23:59:59.999
+        filter.transaction_date.$lte = to;
+      }
     }
 
     // 3. Sort
@@ -163,9 +163,8 @@ const getList = async (query) => {
       pagination: {
         page,
         size,
-        totalItems,
-        totalPages: Math.ceil(totalItems / size),
-      },Í
+        totalItems
+      }, 
     };
   } catch (error) {
     logger.error("Get list failed", {
