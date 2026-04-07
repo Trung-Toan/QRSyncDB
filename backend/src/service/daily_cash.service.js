@@ -33,7 +33,7 @@ const create = async (dataInsert) => {
             dataInsert.report_date = new Date(year, month - 1, day, 0, 0, 0, 0);
 
             // Validation
-            if (!dataInsert.cash_in || dataInsert.cash_in <= 0) {
+            if (dataInsert.cash_in == null || dataInsert.cash_in <= 0) {
                   throw new errorRes.BadRequestError("Tổng tiền mặt thu vào phải lớn hơn 0.");
             }
             // Check cash_out: chỉ check nếu người dùng có truyền vào
@@ -94,9 +94,13 @@ const getList = async (query) => {
 
             // search theo remitter, remitter_bank, details
             if (search) {
-                  filter.$or = [
-                        { report_date: { $regex: search, $options: "i" } },
-                  ];
+                  const searchDate = new Date(search);
+                  if (!isNaN(searchDate)) {
+                        const start = new Date(searchDate.setHours(0, 0, 0, 0));
+                        const end = new Date(searchDate.setHours(23, 59, 59, 999));
+
+                        filter.report_date = { $gte: start, $lte: end };
+                  }
             }
 
             // filter theo date
